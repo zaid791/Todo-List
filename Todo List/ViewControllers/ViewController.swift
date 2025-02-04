@@ -78,6 +78,15 @@ extension ViewController: UITableViewDelegate{
         let vc = storyboard?.instantiateViewController(identifier: "task") as! TaskViewController
         vc.title = "Task Details"
         vc.task = tasks[indexPath.row]
+        vc.taskIndex = indexPath.row
+        vc.updateTasks = {
+            DispatchQueue.main.async {
+                // Show Toast Message
+                self.view.makeToast("Deleted Successfully!")
+                self.updateTasks()  // Reload tasks after deletion
+            }
+            
+        }
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -108,10 +117,27 @@ extension ViewController: UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
+            // Remove from UserDefaults
+            let count = UserDefaults.standard.integer(forKey: "count")
+            
+            for i in indexPath.row..<count - 1 {
+                if let nextTask = UserDefaults.standard.string(forKey: "task_\(i+2)") {
+                    UserDefaults.standard.set(nextTask, forKey: "task_\(i+1)")
+                }
+            }
+            
+            // Remove the last task key
+            UserDefaults.standard.removeObject(forKey: "task_\(count)")
+            UserDefaults.standard.set(count - 1, forKey: "count")
+            
+            // Remove from local tasks array
             tasks.remove(at: indexPath.row)
+            
+            // Update UI
             tableView.deleteRows(at: [indexPath], with: .fade)
             self.view.makeToast("Task Deleted")
         }
     }
+    
 }
 

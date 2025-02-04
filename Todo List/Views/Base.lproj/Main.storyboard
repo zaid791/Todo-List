@@ -63,7 +63,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5g3-it-zeW">
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" toolTip="Task Name" borderStyle="line" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5g3-it-zeW">
                                 <rect key="frame" x="20" y="79" width="353" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="2cu-5x-6uk"/>
@@ -73,11 +73,12 @@
                             </textField>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="O3f-55-TXZ"/>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="5g3-it-zeW" firstAttribute="top" secondItem="O3f-55-TXZ" secondAttribute="top" constant="20" id="3w9-Fy-9we"/>
                             <constraint firstItem="5g3-it-zeW" firstAttribute="leading" secondItem="O3f-55-TXZ" secondAttribute="leading" constant="20" id="RDj-Sj-Ei0"/>
                             <constraint firstItem="O3f-55-TXZ" firstAttribute="trailing" secondItem="5g3-it-zeW" secondAttribute="trailing" constant="20" id="eGV-DS-JqX"/>
+                            <constraint firstItem="O3f-55-TXZ" firstAttribute="bottom" secondItem="5g3-it-zeW" secondAttribute="bottom" constant="640" id="pay-dN-zEy"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
@@ -97,9 +98,26 @@
                     <view key="view" contentMode="scaleToFill" id="lHy-em-4cI">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Ij-QR-JuF">
+                                <rect key="frame" x="12" y="71" width="369" height="735"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="QY7-5q-vYY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="2Ij-QR-JuF" firstAttribute="leading" secondItem="QY7-5q-vYY" secondAttribute="leading" constant="12" id="0Ep-yU-3Ry"/>
+                            <constraint firstItem="2Ij-QR-JuF" firstAttribute="top" secondItem="QY7-5q-vYY" secondAttribute="top" constant="12" id="DbZ-Cz-5X9"/>
+                            <constraint firstItem="QY7-5q-vYY" firstAttribute="trailing" secondItem="2Ij-QR-JuF" secondAttribute="trailing" constant="12" id="mzm-11-vWc"/>
+                            <constraint firstItem="QY7-5q-vYY" firstAttribute="bottom" secondItem="2Ij-QR-JuF" secondAttribute="bottom" constant="12" id="vNa-9k-xIn"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="label" destination="2Ij-QR-JuF" id="bAs-3W-2D1"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VZq-Z7-rJh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

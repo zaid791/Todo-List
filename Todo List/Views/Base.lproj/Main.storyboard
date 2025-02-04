@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="m71-Ok-Lag">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -20,7 +21,7 @@
                                 <rect key="frame" x="0.0" y="103" width="393" height="715"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="A1R-oI-Z8b">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="A1R-oI-Z8b" customClass="TableViewCell" customModule="Todo_List" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="393" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="A1R-oI-Z8b" id="WgJ-Wg-GFS">
@@ -63,22 +64,27 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" toolTip="Task Name" borderStyle="line" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5g3-it-zeW">
-                                <rect key="frame" x="20" y="79" width="353" height="50"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="egQ-fN-aRR">
+                                <rect key="frame" x="20" y="89" width="353" height="50"/>
+                                <subviews>
+                                    <textField toolTip="Task Name" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Task" textAlignment="natural" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="5g3-it-zeW">
+                                        <rect key="frame" x="0.0" y="0.0" width="353" height="50"/>
+                                        <color key="backgroundColor" red="0.18835786308736921" green="0.44564715556184842" blue="0.86078912019729614" alpha="0.5011160714285714" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="2cu-5x-6uk"/>
+                                    <constraint firstAttribute="height" constant="50" id="xuw-6l-toA"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="O3f-55-TXZ"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="5g3-it-zeW" firstAttribute="top" secondItem="O3f-55-TXZ" secondAttribute="top" constant="20" id="3w9-Fy-9we"/>
-                            <constraint firstItem="5g3-it-zeW" firstAttribute="leading" secondItem="O3f-55-TXZ" secondAttribute="leading" constant="20" id="RDj-Sj-Ei0"/>
-                            <constraint firstItem="O3f-55-TXZ" firstAttribute="trailing" secondItem="5g3-it-zeW" secondAttribute="trailing" constant="20" id="eGV-DS-JqX"/>
-                            <constraint firstItem="O3f-55-TXZ" firstAttribute="bottom" secondItem="5g3-it-zeW" secondAttribute="bottom" constant="640" id="pay-dN-zEy"/>
+                            <constraint firstItem="egQ-fN-aRR" firstAttribute="top" secondItem="O3f-55-TXZ" secondAttribute="top" constant="30" id="TNa-O5-CNZ"/>
+                            <constraint firstItem="egQ-fN-aRR" firstAttribute="leading" secondItem="O3f-55-TXZ" secondAttribute="leading" constant="20" id="ftK-sp-mKY"/>
+                            <constraint firstItem="O3f-55-TXZ" firstAttribute="trailing" secondItem="egQ-fN-aRR" secondAttribute="trailing" constant="20" id="gKq-GU-l8W"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
@@ -89,7 +95,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bOX-Kc-T54" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="178" y="418"/>
+            <point key="canvasLocation" x="177.86259541984731" y="417.6056338028169"/>
         </scene>
         <!--Task View Controller-->
         <scene sceneID="xeS-0w-Yxp">

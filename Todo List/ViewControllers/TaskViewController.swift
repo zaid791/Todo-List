@@ -26,6 +26,7 @@ class TaskViewController: UIViewController {
 //        
 //        UserDefaults().set(newCount, forKey: "count")
 //        UserDefaults().set(nil, forKey: "task_\(curentPosition)")
+        self.view.makeToast("Deleted Succesfully!")
         navigationController?.popViewController(animated: true)
     }
 }

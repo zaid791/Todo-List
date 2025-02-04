@@ -6,11 +6,14 @@
 //
 
 import UIKit
+import Toast_Swift
 
 class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     var tasks: [String] = []
+    var selectedIndex: Int? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "To Do List"
@@ -23,6 +26,15 @@ class ViewController: UIViewController {
             UserDefaults().set(true, forKey: "setup")
             UserDefaults().set(0, forKey: "count")
         }
+        
+        // Register the cell class
+        tableView.register(TableViewCell.self, forCellReuseIdentifier: TableViewCell.identifier)
+        
+        // Enable automatic height calculation
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 44  // Provide a reasonable estimate
+        
+        
         //Get All Current Saved Tasks
         updateTasks()
     }
@@ -48,10 +60,11 @@ class ViewController: UIViewController {
         vc.title = "New Task"
         vc.update = {
             DispatchQueue.main.async {
+                self.view.makeToast("Task Added Succesfully!")
                 self.updateTasks()
             }
         }
-    
+        
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -75,8 +88,30 @@ extension ViewController: UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = tasks[indexPath.row]
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCell.identifier, for: indexPath) as? TableViewCell else {
+            return UITableViewCell()
+        }
+        
+        cell.configure(with: tasks[indexPath.row], isSelected: indexPath.row == selectedIndex)
+        
+        cell.onRadioButtonTap = { [weak self] in
+            self?.selectedIndex = indexPath.row
+            tableView.reloadData()
+        }
+        
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            tasks.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            self.view.makeToast("Task Deleted")
+        }
+    }
 }
+

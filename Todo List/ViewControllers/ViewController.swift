@@ -11,6 +11,8 @@ import Toast_Swift
 class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
+    @IBOutlet weak var ivEmpty: UIImageView!
+    
     var tasks: [String] = []
     var selectedIndex: Int? = nil
     
@@ -26,9 +28,8 @@ class ViewController: UIViewController {
             UserDefaults().set(true, forKey: "setup")
             UserDefaults().set(0, forKey: "count")
         }
-        
         // Register the cell class
-        tableView.register(TableViewCell.self, forCellReuseIdentifier: TableViewCell.identifier)
+        tableView.register(TableViewCell.nib, forCellReuseIdentifier: TableViewCell.identifier)
         
         // Enable automatic height calculation
         tableView.rowHeight = UITableView.automaticDimension
@@ -42,9 +43,7 @@ class ViewController: UIViewController {
     func updateTasks(){
         tasks.removeAll()
         
-        guard let count = UserDefaults().value(forKey: "count") as? Int else {
-            return
-        }
+        let count = UserDefaults().value(forKey: "count") as? Int ?? 0
         
         for x in 0..<count {
             if let task = UserDefaults.standard.value(forKey: "task_\(x+1)") as? String{
@@ -53,8 +52,18 @@ class ViewController: UIViewController {
         }
         
         tableView.reloadData()
+        checkCount()
     }
     
+    func checkCount(){
+        let count = UserDefaults().value(forKey: "count") as? Int ?? 0
+        
+        if count == 0{
+            ivEmpty.isHidden = false
+        } else {
+            ivEmpty.isHidden = true
+        }
+    }
     @IBAction func didTapAdd(_ sender: UIBarButtonItem) {
         let vc = storyboard?.instantiateViewController(identifier: "entry") as! EntryViewController
         vc.title = "New Task"
@@ -68,6 +77,11 @@ class ViewController: UIViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
     
+    @IBAction func didTapEdit(_ sender: UIBarButtonItem) {
+        tableView.setEditing(!tableView.isEditing, animated: true)
+        let title = tableView.isEditing ? "Done" : "Edit"
+        sender.title = title
+    }
 }
 
 extension ViewController: UITableViewDelegate{
@@ -92,6 +106,11 @@ extension ViewController: UITableViewDelegate{
     
 }
 extension ViewController: UITableViewDataSource{
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         tasks.count
     }
@@ -135,9 +154,21 @@ extension ViewController: UITableViewDataSource{
             
             // Update UI
             tableView.deleteRows(at: [indexPath], with: .fade)
+            checkCount()
             self.view.makeToast("Task Deleted")
         }
     }
     
 }
 
+extension UITableViewCell {
+    /// Return Nib
+    public static var nib: UINib {
+        return UINib(nibName: identifier, bundle: nil)
+    }
+ 
+    /// Return Identifier
+    public static var identifier: String {
+        return String(describing: self)
+    }
+}

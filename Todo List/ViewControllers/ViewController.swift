@@ -13,64 +13,41 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var ivEmpty: UIImageView!
     
-    var tasks: [String] = []
-    var selectedIndex: Int? = nil
+    var tasks: [TodoListItem] = []
+    var selectedIndex = -1
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "To Do List"
-        
+        getAllItems()
+        setupTableView()
+    }
+    func getAllItems(){
+        tasks = CoreDataHelper.shared.getAllItems()
+        ivEmpty.isHidden = !tasks.isEmpty
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
+    func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
-        
-        //Setup defaults
-        if UserDefaults().bool(forKey: "setup"){
-            UserDefaults().set(true, forKey: "setup")
-            UserDefaults().set(0, forKey: "count")
-        }
         // Register the cell class
         tableView.register(TableViewCell.nib, forCellReuseIdentifier: TableViewCell.identifier)
         
         // Enable automatic height calculation
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 44  // Provide a reasonable estimate
-        
-        
-        //Get All Current Saved Tasks
-        updateTasks()
+        tableView.estimatedRowHeight = 44
     }
     
-    func updateTasks(){
-        tasks.removeAll()
-        
-        let count = UserDefaults().value(forKey: "count") as? Int ?? 0
-        
-        for x in 0..<count {
-            if let task = UserDefaults.standard.value(forKey: "task_\(x+1)") as? String{
-                tasks.append(task)
-            }
-        }
-        
-        tableView.reloadData()
-        checkCount()
-    }
-    
-    func checkCount(){
-        let count = UserDefaults().value(forKey: "count") as? Int ?? 0
-        
-        if count == 0{
-            ivEmpty.isHidden = false
-        } else {
-            ivEmpty.isHidden = true
-        }
-    }
     @IBAction func didTapAdd(_ sender: UIBarButtonItem) {
         let vc = storyboard?.instantiateViewController(identifier: "entry") as! EntryViewController
         vc.title = "New Task"
         vc.update = {
             DispatchQueue.main.async {
                 self.view.makeToast("Task Added Succesfully!")
-                self.updateTasks()
+                self.getAllItems()
             }
         }
         
@@ -92,12 +69,11 @@ extension ViewController: UITableViewDelegate{
         let vc = storyboard?.instantiateViewController(identifier: "task") as! TaskViewController
         vc.title = "Task Details"
         vc.task = tasks[indexPath.row]
-        vc.taskIndex = indexPath.row
         vc.updateTasks = {
             DispatchQueue.main.async {
                 // Show Toast Message
                 self.view.makeToast("Deleted Successfully!")
-                self.updateTasks()  // Reload tasks after deletion
+                self.getAllItems()  // Reload tasks after deletion
             }
             
         }
@@ -136,25 +112,8 @@ extension ViewController: UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // Remove from UserDefaults
-            let count = UserDefaults.standard.integer(forKey: "count")
-            
-            for i in indexPath.row..<count - 1 {
-                if let nextTask = UserDefaults.standard.string(forKey: "task_\(i+2)") {
-                    UserDefaults.standard.set(nextTask, forKey: "task_\(i+1)")
-                }
-            }
-            
-            // Remove the last task key
-            UserDefaults.standard.removeObject(forKey: "task_\(count)")
-            UserDefaults.standard.set(count - 1, forKey: "count")
-            
-            // Remove from local tasks array
-            tasks.remove(at: indexPath.row)
-            
-            // Update UI
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            checkCount()
+            CoreDataHelper.shared.delete(item: tasks[indexPath.row])
+            getAllItems()
             self.view.makeToast("Task Deleted")
         }
     }

@@ -34,14 +34,7 @@ class EntryViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
-        guard let count = UserDefaults().value(forKey: "count") as? Int else {
-            return
-        }
-        
-        let newCount = count + 1
-        
-        UserDefaults().set(newCount, forKey: "count")
-        UserDefaults().set(text, forKey: "task_\(newCount)")
+        CoreDataHelper.shared.createItem(name: text)
         
         update?()
         

@@ -11,33 +11,18 @@ class TaskViewController: UIViewController {
     
     @IBOutlet var label: UILabel!
     
-    var task: String?
-    var taskIndex: Int?  // Store the index of the task
+    var task: TodoListItem?
     var updateTasks: (() -> Void)?  // Closure to notify ViewController
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        label.text = task
+        label.text = task?.name
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deleteTask))
     }
     
     @objc func deleteTask() {
-        guard let index = taskIndex else { return }
-
-        // Retrieve the count
-        let count = UserDefaults.standard.integer(forKey: "count")
-
-        // Shift remaining tasks
-        for i in index..<count - 1 {
-            if let nextTask = UserDefaults.standard.string(forKey: "task_\(i+2)") {
-                UserDefaults.standard.set(nextTask, forKey: "task_\(i+1)")
-            }
-        }
-
-        // Remove the last task key
-        UserDefaults.standard.removeObject(forKey: "task_\(count)")
-        UserDefaults.standard.set(count - 1, forKey: "count")
+        CoreDataHelper.shared.delete(item: task!)
 
         // Notify ViewController to update the list
         updateTasks?()

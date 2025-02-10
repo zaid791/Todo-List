@@ -22,6 +22,7 @@ class ViewController: UIViewController {
         getAllItems()
         setupTableView()
     }
+    
     func getAllItems(){
         tasks = CoreDataHelper.shared.getAllItems()
         ivEmpty.isHidden = !tasks.isEmpty
@@ -66,18 +67,43 @@ extension ViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let vc = storyboard?.instantiateViewController(identifier: "task") as! TaskViewController
-        vc.title = "Task Details"
-        vc.task = tasks[indexPath.row]
-        vc.updateTasks = {
-            DispatchQueue.main.async {
-                // Show Toast Message
-                self.view.makeToast("Deleted Successfully!")
-                self.getAllItems()  // Reload tasks after deletion
+        let item = tasks[indexPath.row]
+        let sheet = UIAlertController(title: "Edit", message: nil, preferredStyle: .actionSheet)
+        sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        sheet.addAction(UIAlertAction(title: "Open", style: .default, handler: { _ in
+            let vc = self.storyboard?.instantiateViewController(identifier: "task") as! TaskViewController
+            vc.title = "Task Details"
+            vc.task = item
+            vc.updateTasks = {
+                DispatchQueue.main.async {
+                    // Show Toast Message
+                    self.view.makeToast("Deleted Successfully!")
+                    self.getAllItems()  // Reload tasks after deletion
+                }
             }
-            
-        }
-        navigationController?.pushViewController(vc, animated: true)
+            self.navigationController?.pushViewController(vc, animated: true)
+        }))
+        
+        sheet.addAction(UIAlertAction(title: "Edit", style: .default, handler: { _ in
+            let alert = UIAlertController(title: "Edit Item", message: "Edit Your Item", preferredStyle: .alert)
+            alert.addTextField(configurationHandler: nil)
+            alert.textFields?.first?.text = item.name
+            alert.addAction(UIAlertAction(title: "Save", style: .cancel, handler: {_ in
+                guard let field = alert.textFields?.first, let newName = field.text, !newName.isEmpty else { return
+                }
+                CoreDataHelper.shared.updateItem(item: item, newName: newName)
+                
+                self.getAllItems()
+            }))
+            self.present(alert, animated: true)
+        }))
+        
+        sheet.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: {_ in
+            CoreDataHelper.shared.delete(item: item)
+            self.getAllItems()
+        }))
+        
+        present(sheet, animated: true)
     }
     
 }
@@ -125,7 +151,7 @@ extension UITableViewCell {
     public static var nib: UINib {
         return UINib(nibName: identifier, bundle: nil)
     }
- 
+    
     /// Return Identifier
     public static var identifier: String {
         return String(describing: self)

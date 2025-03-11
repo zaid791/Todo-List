@@ -43,25 +43,25 @@ class ViewController: UIViewController {
     }
     
     @IBAction func didTapAdd(_ sender: UIBarButtonItem) {
-//        let vc = storyboard?.instantiateViewController(identifier: "entry") as! EntryViewController
-//        vc.title = "New Task"
-//        vc.update = {
-//            DispatchQueue.main.async {
-//                self.view.makeToast("Task Added Succesfully!")
-//                self.getAllItems()
-//            }
-//        }
-//        
-//        navigationController?.pushViewController(vc, animated: true)
+        let vc = storyboard?.instantiateViewController(identifier: "entry") as! EntryViewController
+        vc.title = "New Task"
+        vc.update = {
+            DispatchQueue.main.async {
+                self.view.makeToast("Task Added Succesfully!")
+                self.getAllItems()
+            }
+        }
         
-        let alert = UIAlertController(title: "New Item", message: "Enter New Item", preferredStyle: .alert)
-        alert.addTextField(configurationHandler: nil)
-        alert.addAction(UIAlertAction(title: "Submit", style: .cancel, handler: { [weak self] _ in
-            guard let field = alert.textFields?.first, let text = field.text, !text.isEmpty else { return }
-            CoreDataHelper.shared.createItem(name: text)
-            self?.getAllItems()
-        }))
-        present(alert, animated: true)
+        navigationController?.pushViewController(vc, animated: true)
+        
+//        let alert = UIAlertController(title: "New Item", message: "Enter New Item", preferredStyle: .alert)
+//        alert.addTextField(configurationHandler: nil)
+//        alert.addAction(UIAlertAction(title: "Submit", style: .cancel, handler: { [weak self] _ in
+//            guard let field = alert.textFields?.first, let text = field.text, !text.isEmpty else { return }
+//            CoreDataHelper.shared.createItem(name: text)
+//            self?.getAllItems()
+//        }))
+//        present(alert, animated: true)
     }
     
     @IBAction func didTapEdit(_ sender: UIBarButtonItem) {
